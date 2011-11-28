@@ -1,0 +1,141 @@
+﻿<Window x:Class="RichTextEditor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+        xmlns:n="clr-namespace:RichTextEditor"
+        Title="RichTextEditor" Height="600" Width="800">
+    <Window.CommandBindings>
+        <CommandBinding Command="n:CustomCommands.Open" Executed="Open" />
+        <CommandBinding Command="n:CustomCommands.Save" Executed="Save" />
+        <CommandBinding Command="n:CustomCommands.Print" Executed="Print" />
+    </Window.CommandBindings>
+    <Window.InputBindings>
+        <KeyBinding Key="O" Modifiers="Control" Command="n:CustomCommands.Open"/>
+        <KeyBinding Key="S" Modifiers="Control" Command="n:CustomCommands.Save"/>
+        <KeyBinding Key="S" Modifiers="Control+Shift" Command="n:CustomCommands.SaveAs"/>
+        <KeyBinding Key="P" Modifiers="Control" Command="n:CustomCommands.Print"/>
+    </Window.InputBindings>
+    <Grid>
+        <Grid.Resources>
+            <Style TargetType="{x:Type Button}" x:Key="toolBarButtonTextStyle">
+                <Setter Property="FontFamily" Value="Palatino Linotype"></Setter>
+                <Setter Property="Width" Value="30"></Setter>
+                <Setter Property="FontSize" Value ="14"></Setter>
+                <Setter Property="CommandTarget" Value="{Binding ElementName=richTextBox}"></Setter>
+            </Style>
+            <Style TargetType="{x:Type Button}" x:Key="toolBarButtonImageStyle">
+                <Setter Property="Width" Value="30"></Setter>
+                <Setter Property="CommandTarget" Value="{Binding ElementName=richTextBox}"></Setter>
+            </Style>
+            <Style TargetType="{x:Type MenuItem}" x:Key="menuItemEditStyle">
+                <Setter Property="CommandTarget" Value="{Binding ElementName=richTextBox}"></Setter>
+            </Style>
+        </Grid.Resources>
+        <Menu IsMainMenu="True" VerticalAlignment="Top">
+            <MenuItem Header="_File" >
+                <MenuItem Header="_Open" Click="OpenMenuItemClick" InputGestureText="Ctrl+O" />
+                <MenuItem Header="_Save" Click="SaveMenuItemClick" InputGestureText="Ctrl+S" />
+                <MenuItem Header="Save _As" Click="SaveAsMenuItemClick" InputGestureText="Ctrl+Shft+S" />
+                <Separator />
+                <MenuItem Header="_Print" Click="PrintMenuItemClick" InputGestureText="Ctrl+P" />
+                <Separator />
+                <MenuItem Header="E_xit" Click="ExitMenuItemClick" InputGestureText="Alt+F4" />
+            </MenuItem>
+            <MenuItem Header="_Edit">
+                <MenuItem Style="{StaticResource menuItemEditStyle}" Command="ApplicationCommands.Undo">
+                    <MenuItem.Icon>
+                        <n:GreyscaleOnDisabledImage Source="Images\Undo.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Style="{StaticResource menuItemEditStyle}" Command="ApplicationCommands.Redo">
+                    <MenuItem.Icon>
+                        <n:GreyscaleOnDisabledImage Source="Images\Redo.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator />
+                <MenuItem Style="{StaticResource menuItemEditStyle}" Command="ApplicationCommands.Cut">
+                    <MenuItem.Icon>
+                        <n:GreyscaleOnDisabledImage Source="Images\Cut.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Style="{StaticResource menuItemEditStyle}" Command="ApplicationCommands.Copy">
+                    <MenuItem.Icon>
+                        <n:GreyscaleOnDisabledImage Source="Images\Copy.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Style="{StaticResource menuItemEditStyle}" Command="ApplicationCommands.Paste">
+                    <MenuItem.Icon>
+                        <n:GreyscaleOnDisabledImage Source="Images\Paste.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="_Help">
+                <MenuItem Header="_About" Click="AboutMenuItemClick" />
+            </MenuItem>
+        </Menu>
+        <DockPanel Name="mainPanel" VerticalAlignment="Stretch" Margin="0,27,0,0">
+            <ToolBar Name="toolBar" Height="30" DockPanel.Dock="Top">
+                <Button Style="{StaticResource toolBarButtonTextStyle}" Command="ApplicationCommands.Cut" ToolTip="Cut">
+                    <n:GreyscaleOnDisabledImage Source="Images\Cut.png" />
+                </Button>
+                <Button Style="{StaticResource toolBarButtonTextStyle}" Command="ApplicationCommands.Copy" ToolTip="Copy">
+                    <n:GreyscaleOnDisabledImage Source="Images\Copy.png" />
+                </Button>
+                <Button Style="{StaticResource toolBarButtonTextStyle}" Command="ApplicationCommands.Paste" ToolTip="Paste">
+                    <n:GreyscaleOnDisabledImage Source="Images\Paste.png" />
+                </Button>
+                <Separator />
+                <Button Style="{StaticResource toolBarButtonImageStyle}" Command="ApplicationCommands.Undo" ToolTip="Undo">
+                    <n:GreyscaleOnDisabledImage Source="Images\Undo.png" />
+                </Button>
+                <Button Style="{StaticResource toolBarButtonImageStyle}" Command="ApplicationCommands.Redo" ToolTip="Redo">
+                    <n:GreyscaleOnDisabledImage Source="Images\Redo.png" />
+                </Button>
+                <Separator />
+                <Button Style="{StaticResource toolBarButtonTextStyle}" Command="EditingCommands.ToggleBold" ToolTip="Bold">
+                    <TextBlock FontWeight="Bold">B</TextBlock>
+                </Button>
+                <Button Style="{StaticResource toolBarButtonTextStyle}" Command="EditingCommands.ToggleItalic" ToolTip="Italic">
+                    <TextBlock FontStyle="Italic" FontWeight="Bold">I</TextBlock>
+                </Button>
+                <Button Style="{StaticResource toolBarButtonTextStyle}" Command="EditingCommands.ToggleUnderline" ToolTip="Underline">
+                    <TextBlock TextDecorations="Underline" FontWeight="Bold">U</TextBlock>
+                </Button>
+                <Button Style="{StaticResource toolBarButtonImageStyle}" Command="EditingCommands.IncreaseFontSize" ToolTip="Grow Font">
+                    <Image Source="Images\Grow.png" />
+                </Button>
+                <Button Style="{StaticResource toolBarButtonImageStyle}" Command="EditingCommands.DecreaseFontSize" ToolTip="Shrink Font">
+                    <Image Source="Images\Shrink.png" />
+                </Button>
+                <Separator />
+                <Button Style="{StaticResource toolBarButtonImageStyle}" Command="EditingCommands.ToggleBullets" ToolTip="Bullets">
+                    <Image Source="Images\Bullets.png" />
+                </Button>
+                <Button Style="{StaticResource toolBarButtonImageStyle}" Command="EditingCommands.ToggleNumbering" ToolTip="Numbering">
+                    <Image Source="Images\Numbering.png" />
+                </Button>
+                <Separator />
+                <Button Style="{StaticResource toolBarButtonTextStyle}" Command="EditingCommands.AlignLeft" ToolTip="Align Left">
+                    <Image Source="Images\AlignLeft.png" />
+                </Button>
+                <Button Style="{StaticResource toolBarButtonTextStyle}" Command="EditingCommands.AlignCenter" ToolTip="Align Center">
+                    <Image Source="Images\AlignCenter.png" />
+                </Button>
+                <Button Style="{StaticResource toolBarButtonTextStyle}" Command="EditingCommands.AlignRight" ToolTip="Align Right">
+                    <Image Source="Images\AlignRight.png" />
+                </Button>
+                <Button Style="{StaticResource toolBarButtonTextStyle}" Command="EditingCommands.AlignJustify" ToolTip="Align Justify">
+                    <Image Source="Images\AlignJustify.png" />
+                </Button>
+                <Separator />
+                <Button Style="{StaticResource toolBarButtonTextStyle}" Command="EditingCommands.IncreaseIndentation" ToolTip="Increase Indent">
+                    <Image Source="Images\IndentationIncrease.png" />
+                </Button>
+                <Button Style="{StaticResource toolBarButtonTextStyle}" Command="EditingCommands.DecreaseIndentation" ToolTip="Decrease Indent">
+                    <Image Source="Images\IndentationDecrease.png" />
+                </Button>
+            </ToolBar>
+            <RichTextBox Name="richTextBox" AcceptsTab="True" AcceptsReturn="True"/>
+        </DockPanel>
+        <StatusBar Height="23" HorizontalAlignment="Stretch" Name="status" VerticalAlignment="Bottom" Width="Auto" />
+    </Grid>
+</Window>
